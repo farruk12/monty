@@ -45,4 +45,5 @@ int is_number(const char *str);
 void pint(stack_t **h, unsigned int data);
 void free_stack(stack_t *stack);
 int main(int argc, char *argv[]);
+void pop(stack_t **stack, unsigned int line_number);
 #endif

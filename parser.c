@@ -16,6 +16,7 @@ void parser(char *line, stack_t **stack, unsigned int line_number)
 		{"push", push},
 		{"pall", pall},
 		{"pint", pint},
+		{"pop", pop},
 		{NULL, NULL} /* Sentinel for the end of the instruction list */
 	};
 
