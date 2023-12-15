@@ -2,8 +2,8 @@
 
 /**
  * push - function to put data on a stack
- * @h: double pointer
- * @data: integer
+ * @stack: double pointer
+ * @line_number: integer
  * Return: always success
  */
 void push(stack_t **stack, unsigned int line_number)
