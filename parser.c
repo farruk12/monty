@@ -1,73 +1,38 @@
 #include "monty.h"
 
 /**
- *parser - function that connects the monty commands to their respective
- *cutom function
- *@line: buffer
- *@stack: DLL
- *@line_number: line number
+ * parser - Executes the specified opcode.
+ * @opcode: param
+ * @stack: param
+ * @line_number: The current line number.
  */
-void parser(char *line, stack_t **stack, unsigned int line_number)
+void parser(char *opcode, stack_t **stack, unsigned int line_number)
 {
-	char *opcode, *argument;
-	int i;
-
-	instruction_t instructions[] = {
-		{"push", push},
-		{"pall", pall},
-		{"pint", pint},
-		{"pop", pop},
-		{NULL, NULL} /* Sentinel for the end of the instruction list */
-	};
-
-	opcode = strtok(line, " \t\n");
-	if (opcode == NULL || opcode[0] == '#')
-		return; /* Ignore empty lines and comments */
-
-	argument = strtok(NULL, " \t\n");
-
-	for (i = 0; instructions[i].opcode != NULL; i++)
-	{
-		if (strcmp(opcode, instructions[i].opcode) == 0)
-		{
-			if (strcmp(opcode, "push") == 0)
-			{
-				if (argument == NULL || !is_number(argument))
-				{
-					fprintf(stderr, "L%u: usage: push integer\n", line_number);
-					exit(EXIT_FAILURE);
-				}
-				instructions[i].f(stack, atoi(argument));
-			}
-			else
-			{
-				instructions[i].f(stack, line_number);
-			}
-			return;
-		}
-	}
-
-	fprintf(stderr, "L%u: unknown instruction %s\n", line_number, opcode);
-	exit(EXIT_FAILURE);
+	if (strcmp(opcode, "push") == 0)
+		push(stack, line_number);
+	else if (strcmp(opcode, "pall") == 0)
+		pall(stack, line_number);
+	else if (strcmp(opcode, "pint") == 0)
+		pint(stack, line_number);
+	else if (strcmp(opcode, "pop") == 0)
+		pop(stack, line_number);
+	else if (strcmp(opcode, "swap") == 0)
+		swap(stack, line_number);
+	else if (strcmp(opcode, "add") == 0)
+		add(stack, line_number);
+	else if (strcmp(opcode, "nop") == 0)
+		nop(stack, line_number);
+	else
+		monty_error("unknown instruction", line_number);
 }
 
 /**
- *is_number - function that checks if the string is digit
- *@str: string to be checked
- *Return: always success
+ * monty_error - function to print error
+ * @msg: The error message.
+ * @line_number: Line number in the file.
  */
-int is_number(const char *str)
+void monty_error(char *msg, unsigned int line_number)
 {
-	const char *c;
-
-	if (str == NULL || *str == '\0')
-		return (0);
-
-	for (c = str; *c != '\0'; c++)
-	{
-		if (!isdigit(*c) && (*c != '-' || *c != '+' || *c != ' '))
-			return (0);
-	}
-
-	return (1);
+	fprintf(stderr, "L%u: %s\n", line_number, msg);
+	exit(EXIT_FAILURE);
 }

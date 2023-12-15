@@ -6,39 +6,47 @@
  * @data: integer
  * Return: always success
  */
-void push(stack_t **h, unsigned int data)
+void push(stack_t **stack, unsigned int line_number)
 {
-	stack_t *newnode = malloc(sizeof(stack_t));
+	char *token = strtok(NULL, " \t\n");
+	int value;
+	stack_t *new_node;
 
-	if (newnode == NULL)
+	if (!token)
 	{
-		fprintf(stderr, "Error: Unable to allocate memory for new node\n");
+		fprintf(stderr, "L%u: usage: push integer\n", line_number);
 		exit(EXIT_FAILURE);
 	}
 
-	newnode->n = data;
-	newnode->next = *h;
-	newnode->prev = NULL;
+	value = atoi(token);
 
-	if (*h != NULL)
+	new_node = malloc(sizeof(stack_t));
+	if (!new_node)
 	{
-		(*h)->prev = newnode;
+		fprintf(stderr, "Error: malloc failed\n");
+		exit(EXIT_FAILURE);
 	}
 
-	*h = newnode;
+	new_node->n = value;
+	new_node->prev = NULL;
+	new_node->next = *stack;
+
+	if (*stack)
+		(*stack)->prev = new_node;
+
+	*stack = new_node;
 }
 /**
- * pall - function to print everything on a stack
- * @head: double pointer
- * @d: integer
- * Return: always success
+ * pall - Prints all the values on the stack.
+ * @stack: Pointer to the stack.
+ * @line_number: Line number in the file.
  */
-void pall(stack_t **head, unsigned int d)
+void pall(stack_t **stack, unsigned int line_number)
 {
-	stack_t *current = *head;
-	(void)d;
+	stack_t *current = *stack;
+	(void)line_number;
 
-	while (current != NULL)
+	while (current)
 	{
 		printf("%d\n", current->n);
 		current = current->next;
